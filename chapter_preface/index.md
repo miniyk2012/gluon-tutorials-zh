@@ -7,7 +7,5 @@
 
    why
    preface
-   install
-   buy-gpu
-   aws
+   notation
 ```

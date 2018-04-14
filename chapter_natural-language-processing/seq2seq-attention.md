@@ -53,7 +53,7 @@ $$\overleftarrow{\mathbf{h}}_t = f(\mathbf{x}_t, \overleftarrow{\mathbf{h}}_{t+1
 
 ![](../img/bi-rnn.svg)
 
-```{.python .input}
+```{.python .input  n=1}
 # 连结两个向量。
 from mxnet import nd
 h_forward = nd.array([1, 2])
@@ -103,7 +103,7 @@ $$\mathbf{s}_{t^\prime} = g(\mathbf{y}_{t^\prime-1}, \mathbf{c}_{t^\prime}, \mat
 $$\mathbf{c}_{t^\prime} = \sum_{t=1}^T \alpha_{t^\prime t} \mathbf{h}_t$$
 
 
-也就是说，给定解码器的当前时刻$t^\prime$，我们需要对解码器中不同时刻的隐含层变量求加权平均。而权值也称注意力权重。它的计算公式是
+也就是说，给定解码器的当前时刻$t^\prime$，我们需要对编码器中不同时刻$t$的隐含层变量求加权平均。而权值也称注意力权重。它的计算公式是
 
 $$\alpha_{t^\prime t} = \frac{\exp(e_{t^\prime t})}{ \sum_{k=1}^T \exp(e_{t^\prime k}) } $$
 
@@ -127,11 +127,11 @@ $$\mathbf{s}_{t^\prime} = \mathbf{z}_{t^\prime} \odot \mathbf{s}_{t^\prime-1}  +
 其中的重置门、更新门和候选隐含状态分别为
 
 
-$$\mathbf{r}_{t^\prime} = \sigma(\mathbf{W}_{yr} \mathbf{y}_{t^\prime} + \mathbf{W}_{sr} \mathbf{s}_{t^\prime - 1} + \mathbf{W}_{cr} \mathbf{c}_{t^\prime} + \mathbf{b}_r)$$
+$$\mathbf{r}_{t^\prime} = \sigma(\mathbf{W}_{yr} \mathbf{y}_{t^\prime-1} + \mathbf{W}_{sr} \mathbf{s}_{t^\prime - 1} + \mathbf{W}_{cr} \mathbf{c}_{t^\prime} + \mathbf{b}_r)$$
 
-$$\mathbf{z}_{t^\prime} = \sigma(\mathbf{W}_{yz} \mathbf{y}_{t^\prime} + \mathbf{W}_{sz} \mathbf{s}_{t^\prime - 1} + \mathbf{W}_{cz} \mathbf{c}_{t^\prime} + \mathbf{b}_z)$$
+$$\mathbf{z}_{t^\prime} = \sigma(\mathbf{W}_{yz} \mathbf{y}_{t^\prime-1} + \mathbf{W}_{sz} \mathbf{s}_{t^\prime - 1} + \mathbf{W}_{cz} \mathbf{c}_{t^\prime} + \mathbf{b}_z)$$
 
-$$\tilde{\mathbf{s}}_{t^\prime} = \text{tanh}(\mathbf{W}_{ys} \mathbf{y}_{t^\prime} + \mathbf{W}_{ss} (\mathbf{s}_{t^\prime - 1} \odot \mathbf{r}_{t^\prime}) + \mathbf{W}_{cs} \mathbf{c}_{t^\prime} + \mathbf{b}_s)$$
+$$\tilde{\mathbf{s}}_{t^\prime} = \text{tanh}(\mathbf{W}_{ys} \mathbf{y}_{t^\prime-1} + \mathbf{W}_{ss} (\mathbf{s}_{t^\prime - 1} \odot \mathbf{r}_{t^\prime}) + \mathbf{W}_{cs} \mathbf{c}_{t^\prime} + \mathbf{b}_s)$$
 
 ## 结论
 

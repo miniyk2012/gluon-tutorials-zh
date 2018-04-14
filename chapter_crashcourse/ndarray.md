@@ -144,7 +144,7 @@ id(x) == before
 
 ## 截取（Slicing）
 
-MXNet NDArray 提供了各种截取方法。截取 x 的 index 为 1、2 的列：
+MXNet NDArray 提供了各种截取方法。截取 x 的 index 为 1、2 的行：
 
 ```{.python .input}
 x = nd.arange(0,9).reshape((3,3))
@@ -176,6 +176,6 @@ x
 
 ## 总结
 
-ndarray模块提供一系列多维数组操作函数。所有函数列表可以参见[NDArray API文档](https://mxnet.incubator.apache.org/api/python/ndarray.html)。
+ndarray模块提供一系列多维数组操作函数。所有函数列表可以参见[NDArray API文档](https://mxnet.incubator.apache.org/api/python/ndarray/ndarray.html)。
 
 **吐槽和讨论欢迎点**[这里](https://discuss.gluon.ai/t/topic/745)
