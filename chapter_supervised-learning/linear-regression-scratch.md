@@ -49,7 +49,7 @@ y += .01 * nd.random_normal(shape=y.shape)
 print(X[0], y[0])
 ```
 
-如果有兴趣，可以使用安装包中已包括的 Python 绘图包 `matplotlib`，生成第二个特征值 (`X[:, 1]`) 和目标值 `Y` 的散点图，更直观地观察两者间的关系。 
+如果有兴趣，可以使用安装包中已包括的 Python 绘图包 `matplotlib`，生成第二个特征值 (`X[:, 1]`) 和目标值 `Y` 的散点图，更直观地观察两者间的关系。
 
 ```{.python .input}
 import matplotlib.pyplot as plt
@@ -134,7 +134,7 @@ def SGD(params, lr):
 ```{.python .input}
 # 模型函数
 def real_fn(X):
-    return 2 * X[:, 0] - 3.4 * X[:, 1] + 4.2
+    return true_w[0] * X[:, 0] + true_w[1] * X[:, 1] + true_b
 # 绘制损失随训练次数降低的折线图，以及预测值和真实值的散点图
 def plot(losses, X, sample_size=100):
     xs = list(range(len(losses)))
@@ -194,7 +194,7 @@ true_w, w
 true_b, b
 ```
 
-## 结论
+## 小结
 
 我们现在看到，仅仅是使用NDArray和autograd就可以很容易实现的一个模型。在接下来的教程里，我们会在此基础上，介绍更多现代神经网络的知识，以及怎样使用少量的MXNet代码实现各种复杂的模型。
 
@@ -202,4 +202,8 @@ true_b, b
 
 尝试用不同的学习率查看误差下降速度（收敛率）
 
-**吐槽和讨论欢迎点**[这里](https://discuss.gluon.ai/t/topic/743)
+## 讨论
+
+欢迎扫码直达[本节内容讨论区](https://discuss.gluon.ai/t/topic/743)：
+
+![](../img/qr/linear-regression-scratch.png)

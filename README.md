@@ -1,8 +1,10 @@
 # 通过MXNet/Gluon来动手学习深度学习
 
-主页在 [https://zh.gluon.ai/](https://zh.gluon.ai/)
+[![Build Status](http://ci.mxnet.io/job/gluon-tutorials-zh/badge/icon)](http://ci.mxnet.io/job/gluon-tutorials-zh/)
 
-请使用 [https://discuss.gluon.ai](https://discuss.gluon.ai) 讨论或报告问题
+主页在 [https://zh.gluon.ai/](https://zh.gluon.ai/)。
+
+请使用 [https://discuss.gluon.ai](https://discuss.gluon.ai) 讨论或报告问题。
 
 ## 如何贡献
 
@@ -10,11 +12,14 @@
 
 build服务器在 http://ci.mxnet.io 。这台服务器有两块Nvidia M60。
 
+
+## 编译HTML版本
+
 所有markdown文件需要在提交前清除output，它们会在服务器上重新执行生成结果。所以需要保证每个notebook执行不要太久，目前限制是20min。
 
 在本地可以如下build html（需要GPU支持）
 
-```bash
+```{.python .input}
 conda env update -f build/build.yml
 source activate gluon_zh_docs
 make html
@@ -24,7 +29,7 @@ make html
 
 如果没有改动notebook里面源代码，所以不想执行notebook，可以使用
 
-```
+```{.python .input}
 make html EVAL=0
 ```
 
@@ -32,13 +37,14 @@ make html EVAL=0
 
 ## 编译PDF版本
 
-编译pdf版本需要xelatex，和思源字体。在Ubuntu可以这样安装
+编译pdf版本需要xelatex、librsvg2-bin（svg图片转pdf）和思源字体。在Ubuntu可以这样安装。
 
-```bash
+```{.python .input}
 sudo apt-get install texlive-full
+sudo apt-get install librsvg2-bin
 ```
 
-```bash
+```{.python .input}
 wget https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SourceHanSansHWSC.zip
 wget https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SourceHanSerifSC_EL-M.zip
 unzip SourceHanSansHWSC.zip
@@ -49,135 +55,85 @@ sudo fc-cache -f -v
 
 这时候可以通过 `fc-list :lang=zh` 来查看安装的中文字体。
 
-然后可以编译了
+然后可以编译了。
 
-```bash
-make latex
-cd _build/latex
-xelatex -interaction nonstopmode gluon_tutorials_zh.tex
+```{.python .input}
+make pdf
 ```
 
+## 英汉术语对照
 
-## Terminology 中英术语对照表
 
-action, 动作
+accuracy，准确率
 
-adversarial learning, 对抗学习
+baseline，基准
 
-agent, 智能体
+batch，批量
 
-attribute space, 属性空间
+bias，偏差
 
-attribute value, 属性值
+binary classification，二元分类
 
-attribute, 属性
+bucketing，分桶
 
-binary classification, 二分类
+class，类
 
-classification, 分类
+classification，分类
 
-cluster, 簇
+collaborative filtering，协同过滤
 
-clustering, 聚类
+cost，成本
 
-confidence, 确信度
+cross-entropy，交叉熵
 
-contextual bandit problem, 情境式赌博机问题
+data set，数据集
 
-covariate shift, 协变量转移
+decision boundary，决策边界
 
-credit assignment problem, 信用分配问题
+dense，稠密
 
-cross-entropy, 交叉熵
+dense layer，全连接层
 
-data set, 数据集
+dropout，丢弃法
 
-dimensionality, 维数
+empirical risk minimization，经验风险最小化
 
-distribution, 分布
+epoch，周期
 
-reinforcement learning, 强化学习
-
-example, 样例
-
-feature vector, 特征向量
+example，样本
 
 feature, 特征
 
-generalization, 泛化
+fully connected layer，全连接层
 
-generative adversarial networks, 生成对抗网络
+hidden layer，隐藏层
 
-ground-truth, 真相、真实
+hidden variable，隐藏变量
 
-hypothesis, 假设
+generalization，泛化
 
-independent and identically distributed(i.i.d), 独立同分布
+hypothesis，假设
 
-instance, 示例
+import，导入
 
-label space, 标注空间
+independent and identically distributed(i.i.d)，独立同分布
 
-label, 标注
+instance，实例
 
-learing algorithm, 学习算法
+label，标签
 
-learned model, 学得模型
+logistic regression，逻辑回归
 
-learner, 学习器
+mean squared error，均方误差
 
-learning, 学习
+metric，指标
 
-machine translation, 机器翻译
+normalization，归一化
 
-Markov Decision Process, 马尔可夫决策过程
+optimizer，优化器
 
-model, 模型
+perplexity，困惑度
 
-multi-armed bandit problem, 多臂赌博机问题
+pipeline，流水线
 
-multi-class classification, 多分类
-
-negative class, 反类
-
-offline learning, 离线学习
-
-positive class, 正类
-
-prediction, 预测
-
-principal component analysis, 主成分分析
-
-regression, 回归
-
-reinforcement learning, 强化学习
-
-representation learning, 表征学习
-
-sample space, 样本空间
-
-sample, 样本
-
-sepecilization, 特化
-
-sequence learning, 序列学习
-
-subspace estimation, 子空间估计
-
-supervised learning, 监督学习
-
-testing sample, 测试样本
-
-testing, 测试
-
-time step, 时间步长
-
-training data, 训练数据
-
-training sample, 训练样本
-
-training set, 训练集
-
-training, 训练
-
-unsupervised learning, 无监督学习
+size，大小

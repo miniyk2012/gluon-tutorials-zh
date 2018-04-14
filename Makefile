@@ -8,7 +8,7 @@ build/%.md: %.md
 	@mkdir -p $(@D)
 	@cp $< $@
 
-MARKDOWN = $(wildcard chapter_preface/*.md */index.md)
+MARKDOWN = $(filter-out chapter_preface/notation.md, $(wildcard chapter_preface/*.md */index.md) chapter_appendix/install.md)
 NOTEBOOK = $(filter-out $(MARKDOWN), $(wildcard chapter*/*.md))
 
 OBJ = $(patsubst %.md, build/%.md, $(MARKDOWN)) \
@@ -34,6 +34,7 @@ build/%: %
 html: $(DEPS) $(OBJ)
 	make -C build html
 	bash build/htaccess.sh build/_build/html/
+	cp tencent1668843323268181422.txt build/_build/html/tencent1668843323268181422.txt
 
 TEX=build/_build/latex/gluon_tutorials_zh.tex
 
@@ -42,7 +43,7 @@ GIF=$(wildcard img/*.gif)
 
 build/_build/latex/%.pdf: img/%.svg
 	@mkdir -p $(@D)
-	convert $< $@
+	rsvg-convert -f pdf -o $@ $<
 
 build/_build/latex/%_00.pdf: img/%_00.pdf
 	@mkdir -p $(@D)
@@ -57,6 +58,8 @@ pdf: $(DEPS) $(OBJ) $(PDFIMG)
 	sed -i s/\.svg/\.pdf/ $(TEX)
 	sed -i s/\}\.gif/\_00\}.pdf/ $(TEX)
 	sed -i s/{tocdepth}{0}/{tocdepth}{1}/ $(TEX)
+	sed -i s/{\\\\releasename}{发布}/{\\\\releasename}{}/ $(TEX)
+	sed -i s/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\}\\\]/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\},formatcom=\\\\footnotesize\\\]/ $(TEX)
 	cd build/_build/latex && \
 	buf_size=10000000 xelatex gluon_tutorials_zh.tex && \
 	buf_size=10000000 xelatex gluon_tutorials_zh.tex
