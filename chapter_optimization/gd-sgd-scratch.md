@@ -1,6 +1,7 @@
 # 梯度下降和随机梯度下降——从零开始
 
-本节中，我们将介绍梯度下降（gradient descent）和随机梯度下降（stochastic gradient descent）算法。由于梯度下降是优化算法的核心部分，理解梯度的涵义十分重要。为了帮助读者深刻理解梯度，我们将从数学角度阐释梯度下降的意义。
+本节中，我们将介绍梯度下降（gradient descent）和随机梯度下降（stochastic gradient descent）算法。由于梯度下降是优化算法的核心部分，理解梯度的涵义十分重要。为了帮助大家深刻理解梯度，我们将从数学角度阐释梯度下降的意义。本节中，我们假设目标函数连续可导。
+
 
 
 ## 一维梯度下降
@@ -17,24 +18,24 @@ $$f(x - \eta f'(x)) \approx f(x) -  \eta f'(x)^2.$$
 
 如果$\eta$是一个很小的正数，那么
 
-$$f(x - \eta f'(x)) \leq f(x).$$
+$$f(x - \eta f'(x)) \lesssim f(x).$$
 
 也就是说，如果目标函数$f(x)$当前的导数$f'(x) \neq 0$，按照
 
 $$x \leftarrow x - \eta f'(x).$$
 
-迭代自变量$x$可能会降低$f(x)$的值。由于导数$f'(x)$是梯度$\nabla_x f$在一维空间的特殊情况，上述迭代自变量$x$的方法也即一维空间的梯度下降。一维空间的梯度下降图7.2（左）所示，自变量$x$沿着梯度方向迭代。
+迭代自变量$x$可能会降低$f(x)$的值。由于导数$f'(x)$是梯度$\nabla_x f$在一维空间的特殊情况，上述迭代自变量$x$的方法也即一维空间的梯度下降。一维空间的梯度下降图7.1（左）所示，自变量$x$沿着梯度方向迭代。
 
-![梯度下降中，目标函数$f(x)$的自变量$x$（圆圈的横坐标）沿着梯度方向迭代](../img/gd_and_overshooting.svg)
+![梯度下降中，目标函数$f(x)$的自变量$x$（圆圈的横坐标）沿着梯度方向迭代。](../img/gd_and_overshooting.svg)
 
 
 ## 学习率
 
 上述梯度下降算法中的$\eta$叫做学习率。这是一个超参数，需要人工设定。学习率$\eta$要取正数。
 
-需要注意的是，学习率过大可能会造成自变量$x$越过（overshoot）目标函数$f(x)$的最优解，甚至发散。见图7.2（右）。
+需要注意的是，学习率过大可能会造成自变量$x$越过（overshoot）目标函数$f(x)$的最优解，甚至发散。见图7.1（右）。
 
-然而，如果学习率过小，目标函数中自变量的迭代速度会过慢。实际中，一个合适的学习率通常是需要通过多次实验找到的。
+然而，如果学习率过小，目标函数中自变量的收敛速度会过慢。实际中，一个合适的学习率通常是需要通过多次实验找到的。
 
 
 ## 多维梯度下降
@@ -85,7 +86,8 @@ $$\mathbb{E}_i \nabla f_i(\boldsymbol{x}) = \frac{1}{n} \sum_{i = 1}^n \nabla f_
 
 ## 小批量随机梯度下降
 
-广义上，每一次迭代可以随机均匀采样一个由训练数据样本索引所组成的小批量（mini-batch）$\mathcal{B}$。类似地，我们可以使用
+广义上，每一次迭代可以随机均匀采样一个由训练数据样本索引所组成的小批量（mini-batch）$\mathcal{B}$。一般来说，
+我们可以通过重复采样（sampling with replacement）或者不重复采样（sampling without replacement）得到同一个小批量中的各个样本。前者允许同一个小批量中出现重复的样本，后者则不允许如此。对于这两者间的任一种方式，我们可以使用
 
 $$\nabla f_\mathcal{B}(\boldsymbol{x}) = \frac{1}{|\mathcal{B}|} \sum_{i \in \mathcal{B}}\nabla f_i(\boldsymbol{x})$$ 
 
@@ -98,6 +100,9 @@ $$\boldsymbol{x} \leftarrow \boldsymbol{x} - \eta \nabla f_\mathcal{B}(\boldsymb
 $$\mathbb{E}_\mathcal{B} \nabla f_\mathcal{B}(\boldsymbol{x}) = \nabla f(\boldsymbol{x}).$$
 
 这个算法叫做小批量随机梯度下降。该算法每次迭代的计算开销为$\mathcal{O}(|\mathcal{B}|)$。当批量大小为1时，该算法即随机梯度下降；当批量大小等于训练数据样本数，该算法即梯度下降。和学习率一样，批量大小也是一个超参数。当批量较小时，虽然每次迭代的计算开销较小，但计算机并行处理批量中各个样本的能力往往只得到较少利用。因此，当训练数据集的样本较少时，我们可以使用梯度下降；当样本较多时，我们可以使用小批量梯度下降并依据计算资源选择合适的批量大小。
+
+实际中，我们通常在每个迭代周期（epoch）开始前随机打乱数据集中样本的先后顺序，然后在同一个迭代周期中依次读取小批量的样本。理论上，这种方法能让符合某些特征的目标函数的优化收敛更快 [2]。我们在实验中也用这种方法随机采样小批量样本。
+
 
 
 ## 小批量随机梯度下降的实现
@@ -112,21 +117,25 @@ def sgd(params, lr, batch_size):
 
 ## 实验
 
-首先，导入实验所需的包。
+首先，导入本节中实验所需的包或模块。
 
 ```{.python .input}
-%config InlineBackend.figure_format = 'retina'
-%matplotlib inline
-import random
 import sys
-import mxnet as mx
-from mxnet import autograd, gluon, nd
-import numpy as np
 sys.path.append('..')
-import utils
+import gluonbook as gb
+from mxnet import autograd, nd
+import numpy as np
+import random
 ```
 
-实验中，我们以之前介绍过的线性回归为例。设数据集的样本数为1000，我们使用权重`w`为[2, -3.4]，偏差`b`为4.2的线性回归模型来生成数据集。该模型的平方损失函数即所需优化的目标函数，模型参数即目标函数自变量。
+实验中，我们以之前介绍过的线性回归为例。我们直接调用`gluonbook`中的线性回归模型和平方损失函数。它们已在[“线性回归——从零开始”](../chapter_supervised-learning/linear-regression-scratch.md)一节中实现过了。
+
+```{.python .input}
+net = gb.linreg
+loss = gb.squared_loss
+```
+
+设数据集的样本数为1000，我们使用权重`w`为[2, -3.4]，偏差`b`为4.2的线性回归模型来生成数据集。该模型的平方损失函数即所需优化的目标函数，模型参数即目标函数自变量。
 
 ```{.python .input  n=2}
 # 生成数据集。
@@ -134,34 +143,18 @@ num_inputs = 2
 num_examples = 1000
 true_w = [2, -3.4]
 true_b = 4.2
-X = nd.random.normal(scale=1, shape=(num_examples, num_inputs))
-y = true_w[0] * X[:, 0] + true_w[1] * X[:, 1] + true_b
-y += 0.01 * nd.random.normal(scale=1, shape=y.shape)
+features = nd.random.normal(scale=1, shape=(num_examples, num_inputs))
+labels = true_w[0] * features[:, 0] + true_w[1] * features[:, 1] + true_b
+labels += nd.random.normal(scale=0.01, shape=labels.shape)
 
 # 初始化模型参数。
 def init_params():
-    w = nd.random.normal(scale=1, shape=(num_inputs, 1))
+    w = nd.random.normal(scale=0.01, shape=(num_inputs, 1))
     b = nd.zeros(shape=(1,))
     params = [w, b]
     for param in params:
         param.attach_grad()
     return params
-
-# 线性回归模型。
-def linreg(X, w, b): 
-    return nd.dot(X, w) + b 
-
-# 平方损失函数。
-def squared_loss(yhat, y): 
-    return (yhat - y.reshape(yhat.shape)) ** 2 / 2
-
-# 遍历数据集。
-def data_iter(batch_size, num_examples, X, y): 
-    idx = list(range(num_examples))
-    random.shuffle(idx)
-    for i in range(0, num_examples, batch_size):
-        j = nd.array(idx[i: min(i + batch_size, num_examples)])
-        yield X.take(j), y.take(j)
 ```
 
 下面我们描述一下优化函数`optimize`。
@@ -171,28 +164,25 @@ def data_iter(batch_size, num_examples, X, y):
 在迭代过程中，每当`log_interval`个样本被采样过后，模型当前的损失函数值（`loss`）被记录下并用于作图。例如，当`batch_size`和`log_interval`都为10时，每次迭代后的损失函数值都被用来作图。
 
 ```{.python .input  n=3}
-net = linreg
-squared_loss = squared_loss
-
 def optimize(batch_size, lr, num_epochs, log_interval, decay_epoch):
     w, b = init_params()
-    y_vals = [squared_loss(net(X, w, b), y).mean().asnumpy()]
+    ls = [loss(net(features, w, b), labels).mean().asnumpy()]
     for epoch in range(1, num_epochs + 1):
         # 学习率自我衰减。
         if decay_epoch and epoch > decay_epoch:
             lr *= 0.1
-        for batch_i, (features, label) in enumerate(
-            data_iter(batch_size, num_examples, X, y)):
+        for batch_i, (X, y) in enumerate(
+            gb.data_iter(batch_size, num_examples, features, labels)):
             with autograd.record():
-                output = net(features, w, b)
-                loss = squared_loss(output, label)
-            loss.backward()
+                l = loss(net(X, w, b), y)
+            # 先对 l 中元素求和，得到小批量损失之和，然后求参数的梯度。
+            l.backward()
             sgd([w, b], lr, batch_size)
             if batch_i * batch_size % log_interval == 0:
-                y_vals.append(squared_loss(net(X, w, b), y).mean().asnumpy())
+                ls.append(loss(net(features, w, b), labels).mean().asnumpy())
     print('w:', w, '\nb:', b, '\n')
-    x_vals = np.linspace(0, num_epochs, len(y_vals), endpoint=True)
-    utils.semilogy(x_vals, y_vals, 'epoch', 'loss')
+    es = np.linspace(0, num_epochs, len(ls), endpoint=True)
+    gb.semilogy(es, ls, 'epoch', 'loss')
 ```
 
 当批量大小为1时，优化使用的是随机梯度下降。在当前学习率下，损失函数值在早期快速下降后略有波动。这是由于随机梯度的方差在迭代过程中无法减小。当迭代周期大于2，学习率自我衰减后，损失函数值下降后较平稳。最终，优化所得的模型参数值`w`和`b`与它们的真实值[2, -3.4]和4.2较接近。
@@ -250,3 +240,5 @@ optimize(batch_size=10, lr=0.002, num_epochs=3, decay_epoch=2,
 ## 参考文献
 
 [1] Stewart, J. (2010). Calculus: Early Transcendentals (7th Edition). Brooks Cole.
+
+[2] Gürbüzbalaban, M., Ozdaglar, A., & Parrilo, P. (2018). Why random reshuffling beats stochastic gradient descent. arXiv preprint arXiv:1510.08560.

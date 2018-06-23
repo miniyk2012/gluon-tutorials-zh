@@ -4,11 +4,11 @@
 
 一个自然的想法是，我们能不能通过神经网络来自动化这个过程。具体来说，我们希望将一张指定的图片的风格，例如梵高的某张油画，应用到另外一张内容图片上。
 
-![Neural Style](../img/neural-style.svg)
+![Neural Style。](../img/neural-style.svg)
 
 [Gatys等人](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf)开创性的通过匹配卷积神经网络的中间层输出来训练出合成图片。它的流程如下所示：
 
-![Neural Style Training](../img/neural-style2.svg)
+![Neural Style Training。](../img/neural-style2.svg)
 
 1. 我们首先挑选一个卷积神经网络来提取特征。我们选择它的特定层来匹配样式，特定层来匹配内容。示意图中我们选择层1,2,4作为样式层，层3作为内容层。
 1. 输入样式图片并保存样式层输出，记第 $i$ 层输出为 $s_i$
@@ -39,7 +39,7 @@ $$ \textrm{styleloss}(s_i, y_i) = \frac{1}{c^2hw} \| s_i s_i^T - y_i y_i^T \|_F 
 %matplotlib inline
 import matplotlib as mpl
 mpl.rcParams['figure.dpi']= 150
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
 from mxnet import image
 
@@ -246,11 +246,11 @@ def train(x, max_epochs, lr, lr_decay_epoch=200):
 ```{.python .input  n=19}
 import sys
 sys.path.append('..')
-import utils
+import gluonbook as gb
 
 image_shape = (300,200)
 
-ctx = utils.try_gpu()
+ctx = gb.try_gpu()
 net.collect_params().reset_ctx(ctx)
 
 content_x, content_y = get_contents(image_shape)
@@ -288,15 +288,16 @@ z = train(x, 300, 0.1, 100)
 plt.imsave('result.png', postprocess(z).asnumpy())
 ```
 
-## 总结
+## 小结
 
-通过匹配神经网络的中间层输出，我们可以有效的融合不同图片的内容和样式。
+* 通过匹配神经网络的中间层输出，我们可以有效的融合不同图片的内容和样式。
 
 ## 练习
 
-1. 改变内容和样式层
-1. 使用不同的权重
-1. 换几张样式和内容图片
+* 改变内容和样式层
+* 使用不同的权重
+* 换几张样式和内容图片
 
+## 扫码直达[讨论区](https://discuss.gluon.ai/t/topic/3273)
 
-**吐槽和讨论欢迎点**[这里](https://discuss.gluon.ai/t/topic/3273)
+![](../img/qr_neural-style.svg)

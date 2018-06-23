@@ -1,6 +1,6 @@
 all: html
 
-build/%.ipynb: %.md build/build.yml utils.py
+build/%.ipynb: %.md build/build.yml $(wildcard gluonbook/*)
 	@mkdir -p $(@D)
 	cd $(@D); python ../md2ipynb.py ../../$< ../../$@
 
@@ -8,13 +8,13 @@ build/%.md: %.md
 	@mkdir -p $(@D)
 	@cp $< $@
 
-MARKDOWN = $(filter-out chapter_preface/notation.md, $(wildcard chapter_preface/*.md */index.md) chapter_appendix/install.md)
+MARKDOWN = $(wildcard */index.md) 
 NOTEBOOK = $(filter-out $(MARKDOWN), $(wildcard chapter*/*.md))
 
 OBJ = $(patsubst %.md, build/%.md, $(MARKDOWN)) \
 	$(patsubst %.md, build/%.ipynb, $(NOTEBOOK))
 
-ORIGN_DEPS = $(wildcard img/* data/*) environment.yml utils.py README.md
+ORIGN_DEPS = $(wildcard img/* data/* gluonbook/*) environment.yml README.md
 DEPS = $(patsubst %, build/%, $(ORIGN_DEPS))
 
 PKG = build/_build/html/gluon_tutorials_zh.tar.gz build/_build/html/gluon_tutorials_zh.zip
@@ -55,14 +55,16 @@ PDFIMG = $(patsubst img/%.svg, build/_build/latex/%.pdf, $(SVG)) \
 pdf: $(DEPS) $(OBJ) $(PDFIMG)
 	@echo $(PDFIMG)
 	make -C build latex
-	sed -i s/\.svg/\.pdf/ $(TEX)
-	sed -i s/\}\.gif/\_00\}.pdf/ $(TEX)
-	sed -i s/{tocdepth}{0}/{tocdepth}{1}/ $(TEX)
-	sed -i s/{\\\\releasename}{发布}/{\\\\releasename}{}/ $(TEX)
-	sed -i s/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\}\\\]/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\},formatcom=\\\\footnotesize\\\]/ $(TEX)
+	sed -i s/\.svg/\.pdf/g $(TEX)
+	sed -i s/\}\.gif/\_00\}.pdf/g $(TEX)
+	sed -i s/{tocdepth}{0}/{tocdepth}{1}/g $(TEX)
+	sed -i s/{\\\\releasename}{发布}/{\\\\releasename}{}/g $(TEX)
+	sed -i s/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\}\\\]/{OriginalVerbatim}\\\[commandchars=\\\\\\\\\\\\{\\\\},formatcom=\\\\footnotesize\\\]/g $(TEX)
+	sed -i s/\\\\usepackage{geometry}/\\\\usepackage[paperwidth=187mm,paperheight=235mm,left=20mm,right=20mm,top=20mm,bottom=15mm,includefoot]{geometry}/g $(TEX)
 	cd build/_build/latex && \
 	buf_size=10000000 xelatex gluon_tutorials_zh.tex && \
 	buf_size=10000000 xelatex gluon_tutorials_zh.tex
 
 clean:
-	rm -rf build/chapter* $(DEPS) $(PKG)
+	rm -rf build/chapter* build/_build $(DEPS) $(PKG)
+

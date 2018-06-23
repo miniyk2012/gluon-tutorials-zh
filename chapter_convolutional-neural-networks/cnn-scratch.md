@@ -1,4 +1,4 @@
-# 卷积神经网络 --- 从0开始
+# 卷积神经网络——从零开始
 
 之前的教程里，在输入神经网络前我们将输入图片直接转成了向量。这样做有两个不好的地方：
 
@@ -186,7 +186,11 @@ for data, _ in train_data:
 跟前面没有什么不同的，除了这里我们使用`as_in_context`将`data`和`label`都放置在需要的设备上。（下面这段代码也将保存在`utils.py`里方便之后使用）。
 
 ```{.python .input  n=60}
-from mxnet import autograd as autograd
+import sys
+sys.path.append('..')
+import gluonbook as gb
+
+from mxnet import autograd
 from utils import SGD, accuracy, evaluate_accuracy
 from mxnet import gluon
 
@@ -203,7 +207,7 @@ for epoch in range(5):
             output = net(data)
             loss = softmax_cross_entropy(output, label)
         loss.backward()
-        SGD(params, learning_rate/batch_size)
+        gb.sgd(params, learning_rate, batch_size)
 
         train_loss += nd.mean(loss).asscalar()
         train_acc += accuracy(output, label)
@@ -214,9 +218,9 @@ for epoch in range(5):
         train_acc/len(train_data), test_acc))
 ```
 
-## 结论
+## 小结
 
-可以看到卷积神经网络比前面的多层感知的分类精度更好。事实上，如果你看懂了这一章，那你基本知道了计算视觉里最重要的几个想法。LeNet早在90年代就提出来了。不管你相信不相信，如果你5年前懂了这个而且开了家公司，那么你很可能现在已经把公司作价几千万卖个某大公司了。幸运的是，或者不幸的是，现在的算法已经更加高级些了，接下来我们会看到一些更加新的想法。
+* 可以看到卷积神经网络比前面的多层感知的分类精度更好。事实上，如果你看懂了这一章，那你基本知道了计算视觉里最重要的几个想法。LeNet早在90年代就提出来了。不管你相信不相信，如果你5年前懂了这个而且开了家公司，那么你很可能现在已经把公司作价几千万卖个某大公司了。幸运的是，或者不幸的是，现在的算法已经更加高级些了，接下来我们会看到一些更加新的想法。
 
 ## 练习
 
@@ -225,4 +229,6 @@ for epoch in range(5):
 - 如果你有GPU，那么尝试用CPU来跑一下看看
 - 你可能注意到比前面的多层感知机慢了很多，那么尝试计算下这两个模型分别需要多少浮点计算。例如$n\times m$和$m \times k$的矩阵乘法需要浮点运算 $2nmk$。
 
-**吐槽和讨论欢迎点**[这里](https://discuss.gluon.ai/t/topic/736)
+## 扫码直达[讨论区](https://discuss.gluon.ai/t/topic/736)
+
+![](../img/qr_cnn-scratch.svg)
